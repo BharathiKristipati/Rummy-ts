@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/*", "def/*", "def/**/*"],
+  "exclude": ["node_modules", "**/__tests__/*"]
+}
