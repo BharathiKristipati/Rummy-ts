@@ -1,15 +1,29 @@
-import { SFSObject, SFSEvent, ExtensionRequest, SmartFox, SFSRoom} from 'sfs2x-api';
+import { Games } from './../entity/Games';
+import { SFSObject, SFSEvent, ExtensionRequest, SmartFox, SFSRoom, JoinRoomRequest, SFSUser} from 'sfs2x-api';
 import * as SFS2X from "sfs2x-api";
+import {CircularJSON} from 'circular-json';
 import {
     IConfig,
     injectable,
     decorate,
     Command
   } from "@robotlegsjs/core";
+  import {ConnectionOptions, createConnection} from "typeorm";
   @injectable()
   export class GameConfig implements IConfig {
     private repository:SFSObject;
     public sfs:SmartFox;
+    options: ConnectionOptions = {
+      type: "mysql",
+      host: "localhost",
+      port: 3306,
+      username: "root",
+      password: "root",
+      database: "clover_rummy",
+      logging: ["query", "error"],
+      synchronize: true,
+      entities: [Games]
+  };
       constructor()
     {
       //this.repository = new SFSObject();
@@ -17,24 +31,57 @@ import {
      console.log("constructor");
      
      //this.sfs.connect("127.0.0.1", 9933);
-     var config = {host:"127.0.0.1",port:8080,useSSL:false,zone:"RummyZone",debug:false};
+     var config = {host:"rummydesk.com",port:8080,useSSL:false,zone:"RummyZone",debug:false};
      this.sfs = new SFS2X.SmartFox(config);
      this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION, this.onConnection, this);
      this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION_LOST, this.onConnectionLost, this);
      this.sfs.addEventListener(SFS2X.SFSEvent.EXTENSION_RESPONSE, this.onExtensionResponse, this);
+     //this.sfs.addEventListener(SFS2X.SFSEvent., this.onExtensionResponse, this);
      this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN, this.onLogin, this);
+     this.sfs.addEventListener(SFS2X.SFSEvent.ROOM_JOIN, this.onRoomJoin, this);
      this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN_ERROR, this.onLoginError, this);
      this.sfs.connect();
+    }
+
+    public onRoomJoin(evtParams)
+    {
+      console.log("onRoomJoin evtParams = " + Object.getOwnPropertyNames(evtParams));
+      var TempObj = new SFSObject();
+      var date = new Date();
+      TempObj.putUtfString("USER_GAME_TOKEN", date.getMilliseconds.toString());
+      var Request = new ExtensionRequest("GAME_LIST", TempObj);
+      this.sfs.send(Request);
     }
 
     public onLogin(evtParams)
     {
       //var sFSObject:SFSObject = evtParams.success;
-      console.log("onLogin evtParams = " + evtParams.success);//+ JSON.stringify(evtParams));
+      console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
+      console.log("onLogin zone = " + evtParams.zone);
+      console.log("onLogin user = " + evtParams.user);
+      
+      var data = evtParams.data;
+      var user:SFSUser = evtParams.user;
+      var game:Games;
+      console.log("onLogin user = " + user.name);
+      console.log("onLogin data = " + Object.getOwnPropertyNames(data));
+      console.log("onLogin data = " + evtParams.data.data);
+      console.log("onLogin _serializer = " + Object.getOwnPropertyNames(data._serializer));
+      console.log("onLogin _dataHolder = " + JSON.stringify(data._dataHolder));
+      //console.log("onLogin evtParams.success = " + evtParams.success);//+ JSON.stringify(evtParams));
+      /*var req = new JoinRoomRequest("Lobby", "", null, true);
+      this.sfs.send(req);
+      console.log("onLogin gamlist requerst sent.");*/
+      var TempObj = new SFSObject();
+      var date = new Date();
+      TempObj.putUtfString("USER_GAME_TOKEN", user.name);
+      var Request = new ExtensionRequest("GAME_LIST", TempObj);
+      console.log("Gamelist Request = " + JSON.stringify(Request));
+      this.sfs.send(Request);
      // var params = new SFS2X.SFSObject();
-      //      params.putInt("n1", 26);
-         //   params.putInt("n2", 16);
-      //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
+     // params.putInt("n1", 26);
+     // params.putInt("n2", 16);
+     //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
     }
 
     public onLoginError(evtParams)
@@ -44,6 +91,7 @@ import {
 
     public onExtensionResponse(evtParams)
     {
+      console.log("onExtensionResponse evtParams = " + Object.getOwnPropertyNames(evtParams));
       console.log("onExtensionResponse evtParams = " + JSON.stringify(evtParams));
     }
 
@@ -56,12 +104,12 @@ import {
             //this.sfs.//SFSEvent("LOGIN");
             var params = new SFS2X.SFSObject();
             params.putUtfString("REQUEST_TYPE", "LOGIN");
-            params.putUtfString("USER_NAME", "bharathi");
-            params.putUtfString("PASSWORD", "1234");
-            params.putUtfString("DEVICE_TOKEN",
+            params.putUtfString("USER_NAME", "leazo");
+            params.putUtfString("PASSWORD", "leazo123");
+            params.putUtfString("DEVICE_TOKEN","");
             var req:SFS2X.LoginRequest;
             //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
-            req = new SFS2X.LoginRequest("bharathi", "", null, "RummyZone");
+            req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
             this.sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));
         }
         else
