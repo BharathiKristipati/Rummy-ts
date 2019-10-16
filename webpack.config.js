@@ -13,6 +13,9 @@ module.exports = {
       robotlegs: "robotlegs/lib/index.js"
     }
   },
+  externals: {
+    'react-native-sqlite-storage': 'react-native-sqlite-storage'
+  },
   module: {
     rules: [{ test: /\.ts$/, loader: "ts-loader" }],
     noParse: [/.*(pixi-particles\.js).*/]

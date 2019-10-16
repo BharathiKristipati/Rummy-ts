@@ -1,4 +1,4 @@
-import { Games } from './../entity/Games';
+//import { Games } from './../entity/Games';
 import { SFSObject, SFSEvent, ExtensionRequest, SmartFox, SFSRoom, JoinRoomRequest, SFSUser} from 'sfs2x-api';
 import * as SFS2X from "sfs2x-api";
 import {CircularJSON} from 'circular-json';
@@ -13,7 +13,7 @@ import {
   export class GameConfig implements IConfig {
     private repository:SFSObject;
     public sfs:SmartFox;
-    options: ConnectionOptions = {
+    /*options: ConnectionOptions = {
       type: "mysql",
       host: "localhost",
       port: 3306,
@@ -21,9 +21,9 @@ import {
       password: "root",
       database: "clover_rummy",
       logging: ["query", "error"],
-      synchronize: true,
+      synchronize: false,
       entities: [Games]
-  };
+  };*/
       constructor()
     {
       //this.repository = new SFSObject();
@@ -59,10 +59,20 @@ import {
       console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
       console.log("onLogin zone = " + evtParams.zone);
       console.log("onLogin user = " + evtParams.user);
-      
+      //createConnection(this.options).then(async connection => {
+       /* createConnection(this.options).then(async connection => {
+          const game = new Games();
+          //user.firstName = "Timber";
+         // user.lastName = "Saw";
+          //user.age = 25;
+          await connection.manager.save(game);
+    console.log("Saved a new user with id: " + user.id);
+          const savedCatalogs = await connection.manager.find(Games);
+          console.log("All catalogs from the db: ", savedCatalogs);
+    }).catch(error => console.log(error));*/
       var data = evtParams.data;
       var user:SFSUser = evtParams.user;
-      var game:Games;
+      //var game:Games;
       console.log("onLogin user = " + user.name);
       console.log("onLogin data = " + Object.getOwnPropertyNames(data));
       console.log("onLogin data = " + evtParams.data.data);
@@ -72,12 +82,12 @@ import {
       /*var req = new JoinRoomRequest("Lobby", "", null, true);
       this.sfs.send(req);
       console.log("onLogin gamlist requerst sent.");*/
-      var TempObj = new SFSObject();
+      /*var TempObj = new SFSObject();
       var date = new Date();
       TempObj.putUtfString("USER_GAME_TOKEN", user.name);
       var Request = new ExtensionRequest("GAME_LIST", TempObj);
       console.log("Gamelist Request = " + JSON.stringify(Request));
-      this.sfs.send(Request);
+      this.sfs.send(Request);*/
      // var params = new SFS2X.SFSObject();
      // params.putInt("n1", 26);
      // params.putInt("n2", 16);
