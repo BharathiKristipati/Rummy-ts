@@ -1,12 +1,40 @@
 import { Games } from './entity/Games';
 import "reflect-metadata";
 import PIXI = require("pixi.js");
+import MYSQL = require('mysql');
 import { Context, MVCSBundle } from "@robotlegsjs/core";
 import { ContextView, PixiBundle } from "@robotlegsjs/pixi";
 import { GameConfig } from "./config/GameConfig";
 import * as SFS2X from "sfs2x-api";
 import "reflect-metadata";
 import {ConnectionOptions, createConnection} from "typeorm";
+import * as express from 'express';
+import * as bodyParser from "body-parser";
+const fetch = require('node-fetch');
+
+//var express = require('express');
+/*var path = require('path');
+//var bodyParser = require('body-parser');
+var mysql = require('mysql');
+var dbConn = mysql.M.connect('mongodb://localhost:27017');
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'colver_rummy'
+})
+
+connection.connect()
+
+connection.query('SELECT * from games', function (err, rows, fields) {
+  if (err) throw err
+
+  console.log('The solution is: ', rows[0].solution)
+})
+
+connection.end()*/
+
+
 /*import * as express from 'express';
 import * as bodyParser from "body-parser";
 import {ConnectionOptions, createConnection} from "typeorm";
@@ -17,7 +45,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("port", process.env.PORT || 3000);*/
 var appRoot = require('app-root-path');
 //var connection = new ActiveXObject("ADODB.Connection") ;
-createConnection("../ormconfig.json").then(async connection => {
+createConnection({
+  type: "mysql",
+  host: "localhost",
+  port: 3306,
+  username: "root",
+  password: "root",
+  database: "clover_rummy",
+  logging: ["query", "error"],
+  synchronize: false,
+  entities: [Games]
+}).then(connection => {
 
    /* console.log("Inserting a new user into the database...");
     const user = new User();
@@ -56,6 +94,10 @@ export class Game {
       .initialize();
     console.log("creating screen manager view");
     this.render();
+
+    fetch('http://localhost:3000/users')
+    .then(res => {res.text()})
+    .then(body => console.log(body));
   }
 
   public render = () => {
