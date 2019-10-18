@@ -1,4 +1,6 @@
-//import { Games } from './../entity/Games';
+import { Game } from './../index';
+import { Games } from './../entity/Games';
+import {GameView} from './../views/GameView';
 import { SFSObject, SFSEvent, ExtensionRequest, SmartFox, SFSRoom, JoinRoomRequest, SFSUser} from 'sfs2x-api';
 import * as SFS2X from "sfs2x-api";
 import {CircularJSON} from 'circular-json';
@@ -9,27 +11,24 @@ import {
     Command
   } from "@robotlegsjs/core";
   import {ConnectionOptions, createConnection} from "typeorm";
+  function formatMovie(movie: any): Games {
+    return { id: movie.id, active: movie.active,
+      _uuid: movie._uuid, deals: movie.deals, entry_fee: movie.entry_fee,
+      bet_type: movie.bet_type, game_sub_type: movie.game_sub_type, number_of_cards: movie.number_of_cards, 
+      game_title: movie.game_title,game_type: movie.game_type, number_of_deck: movie.number_of_deck, 
+      point_value: movie.point_value, pool_deal_prize: movie.pool_deal_prize,pool_game_type: movie.pool_game_type, 
+      reward_points: movie.reward_points, seats: movie.seats, vip: movie.vip,token: movie.token, 
+      created_at: movie.created_at, updated_at: movie.updated_at, status: movie.status};
+  }
   @injectable()
   export class GameConfig implements IConfig {
     private repository:SFSObject;
     public sfs:SmartFox;
-    /*options: ConnectionOptions = {
-      type: "mysql",
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "root",
-      database: "clover_rummy",
-      logging: ["query", "error"],
-      synchronize: false,
-      entities: [Games]
-  };*/
-      constructor()
+   
+    constructor()
     {
-      //this.repository = new SFSObject();
-     // this.repository.addEventListener(SFSEvent.CONNECTION, Connection);
-     console.log("constructor");
-     
+      console.log("constructor");
+    
      //this.sfs.connect("127.0.0.1", 9933);
      var config = {host:"rummydesk.com",port:8080,useSSL:false,zone:"RummyZone",debug:false};
      this.sfs = new SFS2X.SmartFox(config);
@@ -43,6 +42,8 @@ import {
      this.sfs.connect();
     }
 
+    
+
     public onRoomJoin(evtParams)
     {
       console.log("onRoomJoin evtParams = " + Object.getOwnPropertyNames(evtParams));
@@ -55,43 +56,69 @@ import {
 
     public onLogin(evtParams)
     {
-      //var sFSObject:SFSObject = evtParams.success;
       console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
       console.log("onLogin zone = " + evtParams.zone);
       console.log("onLogin user = " + evtParams.user);
-      //createConnection(this.options).then(async connection => {
-       /* createConnection(this.options).then(async connection => {
-          const game = new Games();
-          //user.firstName = "Timber";
-         // user.lastName = "Saw";
-          //user.age = 25;
-          await connection.manager.save(game);
-    console.log("Saved a new user with id: " + user.id);
-          const savedCatalogs = await connection.manager.find(Games);
-          console.log("All catalogs from the db: ", savedCatalogs);
-    }).catch(error => console.log(error));*/
+     
       var data = evtParams.data;
       var user:SFSUser = evtParams.user;
-      //var game:Games;
-      console.log("onLogin user = " + user.name);
-      console.log("onLogin data = " + Object.getOwnPropertyNames(data));
-      console.log("onLogin data = " + evtParams.data.data);
-      console.log("onLogin _serializer = " + Object.getOwnPropertyNames(data._serializer));
-      console.log("onLogin _dataHolder = " + JSON.stringify(data._dataHolder));
-      //console.log("onLogin evtParams.success = " + evtParams.success);//+ JSON.stringify(evtParams));
-      /*var req = new JoinRoomRequest("Lobby", "", null, true);
-      this.sfs.send(req);
-      console.log("onLogin gamlist requerst sent.");*/
-      /*var TempObj = new SFSObject();
-      var date = new Date();
-      TempObj.putUtfString("USER_GAME_TOKEN", user.name);
-      var Request = new ExtensionRequest("GAME_LIST", TempObj);
-      console.log("Gamelist Request = " + JSON.stringify(Request));
-      this.sfs.send(Request);*/
-     // var params = new SFS2X.SFSObject();
-     // params.putInt("n1", 26);
-     // params.putInt("n2", 16);
-     //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
+      var gamesArray;
+     /* fetch('http://localhost:3000/games', {method: 'GET',headers: {'Accept': 'application/json','Content-Type': 'application/json'}})
+      .then(res => {let b:Games = res;console.log(b);})
+      .then(async function (a) {
+        console.log(a);
+        console.log((String(a)));// call the json method on the response to get JSON
+    })
+      .then(res => console.log(res))
+      .then(body => console.log(body));*/
+
+    /*fetch(`http://localhost:3000/games`)
+        .then(res => res.json())
+        .then(res => res.map((games: any) => formatMovie(games)))
+        .then(async function (a) {
+        console.log(a);
+        this.LoadLobby(a);
+        //gamesArray = a;
+        console.log("a = "  +a);
+        console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
+        //this.LoadLobby(a);
+    });
+    */
+      gamesArray = this.getvals(this.LoadLobby);
+
+      //this.LoadLobby(gamesArray);
+      //console.log("onLogin user = " + user.name);
+      //console.log("onLogin data = " + Object.getOwnPropertyNames(data));
+      //console.log("onLogin data = " + evtParams.data.data);
+      //console.log("onLogin _serializer = " + Object.getOwnPropertyNames(data._serializer));
+      //console.log("onLogin _dataHolder = " + JSON.stringify(data._dataHolder));
+    }
+
+    public getvals(cb){
+      return fetch(`http://localhost:3000/games`)
+      .then(res => res.json())
+      .then(res => res.map((games: any) => formatMovie(games)))
+      .then(async function (a) {
+      console.log(a);
+     // this.LoadLobby(a);
+      //gamesArray = a;
+      console.log("a = "  +a);
+      console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
+      cb(a);
+      return a;
+      //this.LoadLobby(a);
+      });
+      //.catch(error => console.warn(error));
+
+    }
+
+    public LoadLobby(evtParams)
+    {
+      console.log("LoadLobby evtParams = " + evtParams);// + JSON.stringify(evtParams));
+      console.log("LoadLobby root = " + document);
+      var game_lobby:GameView = new GameView();
+      game_lobby.loadLobby();
+      
     }
 
     public onLoginError(evtParams)

@@ -30,11 +30,11 @@ createConnection({
    await connection.manager.save(user);
    console.log("Saved a new user with id: " + user.id);*/
 
-  console.log("Loading users from the database...");
-  const users = await connection.manager.find(Games);
-  console.log("Loaded users: ", users);
+  //console.log("Loading users from the database...");
+  //const users = await connection.manager.find(Games);
+ // console.log("Loaded users: ", users);
 
-  console.log("Here you can setup and run express/koa/any other framework.");
+  //console.log("Here you can setup and run express/koa/any other framework.");
 
 }).catch(error => console.log(error));
 
@@ -45,18 +45,18 @@ app.set("port", process.env.PORT || 3000);
 
 app.use(cors())
 
-app.get('/users', async function (req, res) {
-  const users = await mysqlConnection.manager.find(Games);
-  res.json(users)
+app.get('/games', async function (req, res) {
+  const games = await mysqlConnection.manager.find(Games);
+  res.json(games)
 });
 
-app.post('/users', async function (req, res) {
-  const users = await mysqlConnection.manager.find(Games);
-  res.send(users);
+/*app.post('/games', async function (req, res) {
+  const games = await mysqlConnection.manager.find(Games);
+  res.send(games);
 });
 
-app.put('/users', async function (req, res) {
-  const users = await mysqlConnection.manager.find(Games);
-  res.send(users);
-});
+app.put('/games', async function (req, res) {
+  const games = await mysqlConnection.manager.find(Games);
+  res.send(games);
+});*/
 var server = app.listen(3000, function () { });
