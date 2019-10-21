@@ -3,6 +3,7 @@ import { Games } from './../entity/Games';
 import {GameView} from './../views/GameView';
 import { SFSObject, SFSEvent, ExtensionRequest, SmartFox, SFSRoom, JoinRoomRequest, SFSUser} from 'sfs2x-api';
 import * as SFS2X from "sfs2x-api";
+import * as global from  './../index';
 import {CircularJSON} from 'circular-json';
 import {
     IConfig,
@@ -24,11 +25,16 @@ import {
   export class GameConfig implements IConfig {
     private repository:SFSObject;
     public sfs:SmartFox;
-   
+    private oDealListPractice:Array<Games> = new Array<Games>();
+    private oDealListCash:Array<Games> = new Array<Games>();
+    private oPointsListPractice:Array<Games> = new Array<Games>();
+    private oPointsListCash:Array<Games> = new Array<Games>();
+    private oPoolListPractice:Array<Games> = new Array<Games>();
+    private oPoolListCash:Array<Games> = new Array<Games>();
     constructor()
     {
       console.log("constructor");
-    
+      //global.game.setGameConfig(this);
      //this.sfs.connect("127.0.0.1", 9933);
      var config = {host:"rummydesk.com",port:8080,useSSL:false,zone:"RummyZone",debug:false};
      this.sfs = new SFS2X.SmartFox(config);
@@ -114,8 +120,62 @@ import {
 
     public LoadLobby(evtParams)
     {
-      console.log("LoadLobby evtParams = " + evtParams);// + JSON.stringify(evtParams));
+      console.log("LoadLobby evtParams = " + evtParams.length);// + JSON.stringify(evtParams));
       console.log("LoadLobby root = " + document);
+     // console.log("LoadLobby this.oDealListCash.length = " + this.oDealListCash.length);
+     // console.log("LoadLobby this.oDealListPractice.length = " + this.oDealListPractice.length);
+      //console.log("LoadLobby this.oPointsListCash.length = " + this.oPointsListCash.length);
+     // console.log("LoadLobby this.oPointsListPractice.length = " + this.oPointsListPractice.length);
+     // console.log("LoadLobby this.oPoolListCash.length = " + this.oPoolListCash.length);
+      //console.log("LoadLobby this.oPoolListPractice.length = " + this.oPoolListPractice.length);
+      global.game.getGameConfig().oDealListPractice = new Array<Games>();
+      global.game.getGameConfig().oDealListCash = new Array<Games>();
+      global.game.getGameConfig().oPointsListPractice = new Array<Games>();
+      global.game.getGameConfig().oPointsListCash = new Array<Games>();
+      global.game.getGameConfig().oPoolListPractice = new Array<Games>();
+      global.game.getGameConfig().oPoolListCash = new Array<Games>();
+      console.log("LoadLobby this = " + this);
+      //this = global.game.getGameConfig();
+      console.log("LoadLobby global.game.getGameConfig() = " + global.game.getGameConfig());
+      for(var i = 0; i < evtParams.length; ++i)
+      {
+        console.log("LoadLobby evtParams.game_type = " + evtParams[i].game_type);
+        console.log("LoadLobby evtParams.game_sub_type = " + evtParams[i].game_sub_type);
+        if(evtParams[i].game_sub_type == "Deals")
+        {
+          if(evtParams[i].game_type == "Cash")
+          {
+            global.game.getGameConfig().oDealListCash.push(evtParams[i]);
+          }else{
+            global.game.getGameConfig().oDealListPractice.push(evtParams[i]);
+          }
+        }
+        else if(evtParams[i].game_sub_type == "Points")
+        {
+          if(evtParams[i].game_type == "Cash")
+          {
+            global.game.getGameConfig().oPointsListCash.push(evtParams[i]);
+          }else{
+            global.game.getGameConfig().oPointsListPractice.push(evtParams[i]);
+          }
+        }else if(evtParams[i].game_sub_type == "Pool")
+        {
+          if(evtParams[i].game_type == "Cash")
+          {
+            global.game.getGameConfig().oPoolListCash.push(evtParams[i]);
+          }else{
+            global.game.getGameConfig().oPoolListPractice.push(evtParams[i]);
+          }
+        }
+        //console.log("LoadLobby evtParams = " + evtParams.length());
+        //if(evtParams[i])
+      }
+      console.log("LoadLobby this.oDealListCash.length = " + global.game.getGameConfig().oDealListCash.length);
+      console.log("LoadLobby this.oDealListPractice.length = " + global.game.getGameConfig().oDealListPractice.length);
+      console.log("LoadLobby this.oPointsListCash.length = " + global.game.getGameConfig().oPointsListCash.length);
+      console.log("LoadLobby this.oPointsListPractice.length = " + global.game.getGameConfig().oPointsListPractice.length);
+      console.log("LoadLobby this.oPoolListCash.length = " + global.game.getGameConfig().oPoolListCash.length);
+      console.log("LoadLobby this.oPoolListPractice.length = " + global.game.getGameConfig().oPoolListPractice.length);
       var game_lobby:GameView = new GameView();
       game_lobby.loadLobby();
       

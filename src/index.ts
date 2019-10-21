@@ -26,8 +26,9 @@ export class Game {
     this.context
       .install(MVCSBundle, PixiBundle)
       .configure(new ContextView(this._app.stage))
-      .configure(GameConfig)
+      //.configure(GameConfig)
       .initialize();
+      this.gameConfig = new GameConfig();
     console.log("creating screen manager view");
     this.render();
    // gameConfig = new GameConfig();
@@ -40,6 +41,17 @@ export class Game {
     return this._app.stage;
   }
 
+  public getGameConfig()
+  {
+    //this.context.
+    return this.gameConfig;
+  }
+
+  public setGameConfig(gameCon)
+  {
+    this.gameConfig = gameCon;
+  }
+
   public render = () => {
     this._app.renderer.render(this._app.stage);
     window.requestAnimationFrame(this.render);
@@ -47,3 +59,4 @@ export class Game {
 }
 
 export const game: Game = new Game();
+//export var gameConfig: GameConfig;
