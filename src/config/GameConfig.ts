@@ -31,6 +31,7 @@ import {
     private oPointsListCash:Array<Games> = new Array<Games>();
     private oPoolListPractice:Array<Games> = new Array<Games>();
     private oPoolListCash:Array<Games> = new Array<Games>();
+    private game_lobby:GameView;
     constructor()
     {
       console.log("constructor");
@@ -176,9 +177,15 @@ import {
       console.log("LoadLobby this.oPointsListPractice.length = " + global.game.getGameConfig().oPointsListPractice.length);
       console.log("LoadLobby this.oPoolListCash.length = " + global.game.getGameConfig().oPoolListCash.length);
       console.log("LoadLobby this.oPoolListPractice.length = " + global.game.getGameConfig().oPoolListPractice.length);
-      var game_lobby:GameView = new GameView();
-      game_lobby.loadLobby();
+      global.game.getGameConfig().game_lobby = new GameView();
+      //this.game_lobby = lobby;
+      global.game.getGameConfig().game_lobby.loadLobby();
       
+    }
+
+    public getGameView()
+    {
+      return this.game_lobby;
     }
 
     public onLoginError(evtParams)
@@ -232,4 +239,4 @@ import {
      
     }
   }
-  decorate(injectable(), Command);
+  //decorate(injectable(), Command);

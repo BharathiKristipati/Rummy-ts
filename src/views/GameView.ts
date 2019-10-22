@@ -1,6 +1,9 @@
 import { Game } from './../index';
 import * as global from  './../index';
 import { Container, Sprite} from "pixi.js";
+import * as React from 'react';
+//import * as Data from "/generator';
+import {IGridProps, jqx } from 'jqwidgets-scripts/jqwidgets-react-tsx/jqxgrid';
 //import { Game}
 
 
@@ -11,6 +14,9 @@ import { Container, Sprite} from "pixi.js";
     private pool;
     private cash;
     private tournament;
+    private bIsCash:boolean;
+    private bIsPractice:boolean;
+    private bIsTournament:boolean;
     private practice;
     private user;
     private addCash;
@@ -18,6 +24,8 @@ import { Container, Sprite} from "pixi.js";
     private bonus;
     private app;
     private dealspr;
+    private lobbytable;
+    private container;
 
     constructor() {
     super();
@@ -32,15 +40,17 @@ import { Container, Sprite} from "pixi.js";
     });
     document.body.appendChild(this.app.view);
     //var game:Game = Game(document.body.getElementsByTagName("Game"));*/
-    const container = new PIXI.Container();
-    global.game.getStage().addChild(container);
-    this.bg = PIXI.Texture.from("./../src/Assets/img/lobbyScreen.jpg");//background.png");
+    this.container = new PIXI.Container();
+    const startContainer = new PIXI.Container();
+    startContainer.name = "Start";
+    global.game.getStage().addChild(this.container);
+    this.bg = PIXI.Texture.from("./../src/Assets/img/background.png");//lobbyScreen.jpg");//background.png");
     const bunny = new PIXI.Sprite(this.bg);
     // bunny.anchor.set(0.5);
     bunny.x = 0;
     bunny.y = 0;
-    //bunny.scale.x = 0.67;
-    //bunny.scale.y = 0.67;
+    bunny.scale.x = 0.67;
+    bunny.scale.y = 0.67;
     //this.bg.anchor.x = 0;
     //this.bg.anchor.y = 0;
     //this.bg.position.x = 600;
@@ -55,26 +65,29 @@ import { Container, Sprite} from "pixi.js";
     this.dealspr.scale.x = 0.67;
     this.dealspr.scale.y = 0.67;
     this.dealspr.interactive = true;
+    this.dealspr.name = "deal";
     this.dealspr.buttonMode = true;
-    this.dealspr.on('pointerdown', this.onClick, this.dealspr);
+    this.dealspr.on('pointerdown', this.onClick, this);
 
     const poolspr = new PIXI.Sprite(this.pool);
     poolspr.x = 643;
     poolspr.y = 173;// + 100;
     poolspr.scale.x = 0.67;
     poolspr.scale.y = 0.67;
+    poolspr.name = "pool";
     poolspr.interactive = true;
     poolspr.buttonMode = true;
-    poolspr.on('pointerdown', this.onClick, poolspr);
+    poolspr.on('pointerdown', this.onClick,this);
 
     const pointspr = new PIXI.Sprite(this.points);
     pointspr.x = 285;
     pointspr.y = 173;
     pointspr.scale.x = 0.67;
     pointspr.scale.y = 0.67;
+    pointspr.name = "point";
     pointspr.interactive = true;
     pointspr.buttonMode = true;
-    pointspr.on('pointerdown', this.onClick, pointspr);
+    pointspr.on('pointerdown', this.onClick, this);
 
     this.cash = PIXI.Texture.from("./../src/Assets/img/cash.png");
     this.tournament = PIXI.Texture.from("./../src/Assets/img/tournament.png");
@@ -129,17 +142,18 @@ import { Container, Sprite} from "pixi.js";
     userspr.scale.x = 0.45;
     userspr.scale.y = 0.45;
 
-    container.addChild(bunny);
-    container.addChild(this.dealspr);
-    container.addChild(poolspr);
-    container.addChild(pointspr);
-    container.addChild(cashspr);
-    container.addChild(tournamentspr);
-    container.addChild(practicespr);
-    container.addChild(addCashspr);
-    container.addChild(funCoinsspr);
-    container.addChild(bonusspr);
-    container.addChild(userspr);
+    this.container.addChild(bunny);
+    startContainer.addChild(this.dealspr);
+    startContainer.addChild(poolspr);
+    startContainer.addChild(pointspr);
+    startContainer.addChild(cashspr);
+    startContainer.addChild(tournamentspr);
+    startContainer.addChild(practicespr);
+    startContainer.addChild(addCashspr);
+    startContainer.addChild(funCoinsspr);
+    startContainer.addChild(bonusspr);
+    startContainer.addChild(userspr);
+    this.container.addChild(startContainer);
 
    // document.body.
     //this.app.render(this.bg);
@@ -157,17 +171,229 @@ import { Container, Sprite} from "pixi.js";
     console.log("onClick evt.data = " + Object.getOwnPropertyNames(evt.data));
     console.log("onClick data  = " + evt.data);*/
     console.log("onClick this  = " + this.name);
-    if(evt == this.dealspr)
+    console.log("onClick currentTarget = " + evt.currentTarget.name);
+    console.log("onClick target = " + evt.target.name);
+    if(evt.target.name == "deal")
     {
-      console.log("gottttttt******if(evt == this.dealspr)***************** it ");
+      this.RenderLobbyTables();
+      //console.log("gottttttt******if(evt == this.dealspr)***************** it ");
     }
-    if(evt.currentTarget == this.dealspr)
+    if(evt.target.name == "pool")
     {
-      console.log("gottttttt**********if(evt.currentTarget == this.dealspr)************* it ");
+      this.RenderLobbyTables();
+      //console.log("gottttttt**********if(evt.currentTarget == this.dealspr)************* it ");
     }
-    if(evt.target == this.dealspr)
+    if(evt.target.name == "point")
     {
-      console.log("gottttttt********if(evt.target == this.dealspr)*************** it ");
+      this.RenderLobbyTables();
+      //console.log("gottttttt********if(evt.target == this.dealspr)*************** it ");
     }
   }
+
+  private RenderLobbyTables()
+  {
+    this.lobbytable = PIXI.Texture.from("./../src/Assets/img/Lobby-Table.jpg");
+    
+    const DataGrid = new PIXI.Container();
+    const Header = new PIXI.Graphics();
+    Header.beginFill(0x0c0015);//(0x0c0015);(0xDE3249)
+    Header.drawRect(60, 137, 1157, 102);
+    Header.endFill();
+    Header.lineStyle(2, 0xFF00FF, 1);
+
+    const HeaderH = new PIXI.Graphics();
+    HeaderH.beginFill(0x210237, 0.5);//0x650A5A 0x210237
+    HeaderH.drawRoundedRect(60, 83, 1157, 102, 14);
+    HeaderH.endFill();
+
+    const startLobby = this.container.getChildByName("Start");
+    startLobby.visible = false;
+    // Rectangle
+    const style = new PIXI.TextStyle({fill:'#f6ba32',fontWeight: 'bold',fontSize: 14});
+    const style1 = new PIXI.TextStyle({fill:'#ffffff',fontWeight: 'bold',fontSize: 13});
+    const style2 = new PIXI.TextStyle({fill:'#ffffff',fontWeight: 'bold',fontSize: 24});
+
+    const MyAccount = new PIXI.Text('My Account', style2);
+    MyAccount.x = 315;
+    MyAccount.y = 98;
+
+    const Promotions = new PIXI.Text('Promotions', style2);
+    Promotions.x = 555;
+    Promotions.y = 98;
+
+    const BringAFriend = new PIXI.Text('Bring-A-Friend', style2);
+    BringAFriend.x = 797;
+    BringAFriend.y = 100;
+
+    const RPS = new PIXI.Text('RPS', style2);
+    RPS.x = 364;
+    RPS.y = 100;
+
+    const Name = new PIXI.Text('Name', style);
+    Name.x = 100;
+    Name.y = 180;
+
+    const Deal = new PIXI.Text('Deals', style);
+    Deal.x = 243;
+    Deal.y = 180;
+
+    const MaxPlayers = new PIXI.Text('Max Players', style);
+    MaxPlayers.x = 364;
+    MaxPlayers.y = 180;
+
+    const EntryFee = new PIXI.Text('Entry Fee', style);
+    EntryFee.x = 532;
+    EntryFee.y = 180;
+
+    const Prize = new PIXI.Text('Prize', style);
+    Prize.x = 677;
+    Prize.y = 180;
+
+    const ActivePlayers = new PIXI.Text('Active Players', style);
+    ActivePlayers.x = 773;
+    ActivePlayers.y = 180;
+
+    const Registering = new PIXI.Text('Registering', style);
+    Registering.x = 941;
+    Registering.y = 180;
+
+    const Action = new PIXI.Text('Action', style);
+    Action.x = 1109;
+    Action.y = 180;
+    
+    DataGrid.addChild(HeaderH);
+    DataGrid.addChild(MyAccount);
+    DataGrid.addChild(Promotions);
+    DataGrid.addChild(BringAFriend);
+    DataGrid.addChild(Header);
+    DataGrid.addChild(Name);
+    DataGrid.addChild(Deal);
+    DataGrid.addChild(MaxPlayers);
+    DataGrid.addChild(EntryFee);
+    DataGrid.addChild(Prize);
+    DataGrid.addChild(ActivePlayers);
+    DataGrid.addChild(Registering);
+    DataGrid.addChild(Action);
+   
+    const lobbyspr = new PIXI.Sprite(this.lobbytable);
+
+   // lobbyspr.x = 0;//13;
+    //lobbyspr.y = 0;//13;
+    //lobbyspr.scale.x = 0.45;
+    //lobbyspr.scale.y = 0.45;
+    
+    this.container.addChild(lobbyspr);
+    this.container.addChild(DataGrid);
+    /*const source: any =
+        {
+            datafields: [
+                { name: 'name', type: 'string' },
+                { name: 'type', type: 'string' },
+                { name: 'calories', type: 'int' },
+                { name: 'totalfat', type: 'string' },
+                { name: 'protein', type: 'string' }
+            ],
+            datatype: 'json',
+            id: 'id',
+            url: 'beverages.txt'
+        };
+    var lobbyRender:React.PureComponent<{}, IGridProps> = new React.PureComponent<{}, IGridProps>({});
+    lobbyRender.state = {
+          columns: [
+              { text: 'Name', datafield: 'name', width: 250 },
+              { text: 'Beverage Type', datafield: 'type', width: 250 },
+              { text: 'Calories', datafield: 'calories', width: 180 },
+              { text: 'Total Fat', datafield: 'totalfat', width: 120 },
+              { text: 'Protein', datafield: 'protein', minwidth: 120 }
+          ],
+          source: new jqx.dataAdapter(source)
+      }*/
+  }
 }
+
+/*function createGridWithEditing(selector) {
+  // prepare the data
+  
+  let data = generatedata(20);
+  let source =
+      {
+          localdata: data,
+          datatype: "array",
+          updaterow: function (rowid, rowdata, commit) {
+              // synchronize with the server - send update command
+              // call commit with parameter true if the synchronization with the server is successful 
+              // and with parameter false if the synchronization failder.
+              commit(true);
+          },
+          datafields:
+          [
+              { name: 'firstname', type: 'string' },
+              { name: 'lastname', type: 'string' },
+              { name: 'productname', type: 'string' },
+              { name: 'available', type: 'bool' },
+              { name: 'quantity', type: 'number' },
+              { name: 'price', type: 'number' },
+              { name: 'date', type: 'date' }
+          ]
+      };
+  let dataAdapter = new $.jqx.dataAdapter(source);
+
+  // initialize jqxGrid
+
+  // initialization options - validated in typescript
+  // jqwidgets.GridOptions has generated TS definition
+  let options: jqwidgets.GridOptions = {
+      width: 850,
+      source: dataAdapter,
+      editable: true,
+      enabletooltips: true,
+      selectionmode: 'multiplecellsadvanced',
+      columns: [
+          { text: 'First Name', columntype: 'textbox', datafield: 'firstname', width: 120 },
+          { text: 'Last Name', datafield: 'lastname', columntype: 'textbox', width: 120 },
+          { text: 'Product', columntype: 'dropdownlist', datafield: 'productname', width: 195 },
+          { text: 'Available', datafield: 'available', columntype: 'checkbox', width: 67 },
+          {
+              text: 'Ship Date', datafield: 'date', columntype: 'datetimeinput', width: 110, align: 'right', cellsalign: 'right', cellsformat: 'd',
+              validation: function (cell: any, value: any) {
+                  if (value.toString() == "")
+                      return true;
+
+                  let valueD = new Date(1, 1, 1, 1, 1, 1, 1);
+                  let year = valueD.getFullYear();
+                  if (year >= 2017) {
+                      return { result: false, message: "Ship Date should be before 1/1/2017" };
+                  }
+                  return true;
+              }
+          },
+          {
+              text: 'Quantity', datafield: 'quantity', width: 70, align: 'right', cellsalign: 'right', columntype: 'numberinput',
+              validation: function (cell: any, value: any) {
+                  if (value < 0 || value > 150) {
+                      return { result: false, message: "Quantity should be in the 0-150 interval" };
+                  }
+                  return true;
+              },
+              createeditor: function (row, cellvalue, editor) {
+                  editor.jqxNumberInput({ decimalDigits: 0, digits: 3 });
+              }
+          },
+          {
+              text: 'Price', datafield: 'price', align: 'right', cellsalign: 'right', cellsformat: 'c2', columntype: 'numberinput',
+              validation: function (cell: any, value: any) {
+                  if (value < 0 || value > 15) {
+                      return { result: false, message: "Price should be in the 0-15 interval" };
+                  }
+                  return true;
+              },
+              createeditor: function (row: Number, cellvalue: any, editor: any) {
+                  editor.jqxNumberInput({ digits: 3 });
+              }
+          }
+      ]
+  };
+
+  // creates an instance
+  let myGrid: jqwidgets.jqxGrid = jqwidgets.createInstance(selector, 'jqxGrid', options);
+}*/

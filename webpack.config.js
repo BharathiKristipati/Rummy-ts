@@ -20,7 +20,7 @@ module.exports = {
     rules: [{ test: /\.ts$/, loader: "ts-loader" }],
     noParse: [/.*(pixi-particles\.js).*/]
   },
-  watch: false,
+  watch: true,
   mode: "development",
   node: {
     fs: 'empty',
