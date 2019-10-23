@@ -310,9 +310,9 @@ import { Games } from './../entity/Games';
         Registering.x = 920;
         Registering.y = 20;
 
-        var playNow = PIXI.Texture.from("./../src/Assets/img/cash.png");
+        var playNow = PIXI.Texture.from("./../src/Assets/img/play-now.png");
         const playNowspr = new PIXI.Sprite(playNow);
-        playNowspr.x = 1220;
+        playNowspr.x = 1050;
         playNowspr.y = 13;
         playNowspr.scale.x = 0.45;
         playNowspr.scale.y = 0.45;
