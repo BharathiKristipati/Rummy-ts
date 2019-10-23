@@ -182,6 +182,38 @@ import {
       global.game.getGameConfig().game_lobby.loadLobby();
       
     }
+    public getlobbyData(strGameType:String, strCurType:String)
+    {
+      if(strGameType == "deal")
+      {
+        if(strCurType == "cash")
+        {
+          return this.oDealListCash;
+        }
+        else{
+          return this.oDealListPractice;
+        }
+      }
+      else if(strGameType == "pool")
+      {
+        if(strCurType == "cash")
+        {
+          return this.oPoolListCash;
+        }
+        else{
+          return this.oPoolListPractice;
+        }
+      }
+      else{
+        if(strCurType == "cash")
+        {
+          return this.oPointsListCash;
+        }
+        else{
+          return this.oPointsListPractice;
+        }
+      }
+    }
 
     public getGameView()
     {
