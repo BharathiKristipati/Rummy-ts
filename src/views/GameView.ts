@@ -27,6 +27,7 @@ import { object } from 'prop-types';
     private home;
     private container;
     private DataGrid;
+    private mouseYPos;
     private nOpenGame:number = 0;
 
     constructor() {
@@ -181,18 +182,11 @@ import { object } from 'prop-types';
 
   private onClick(evt)
   {
-    console.log("onClick evt = " + Object.getOwnPropertyNames(evt));
-    /*console.log("onClick stopped = " + evt.stopped);
-    console.log("onClick evt.target = " + Object.getOwnPropertyNames(evt.target));
-    console.log("onClick target = " + evt.target.name);
-    console.log("onClick evt.currentTarget = " + Object.getOwnPropertyNames(evt.currentTarget));
-    console.log("onClick currentTarget = " + evt.currentTarget.name);
-    console.log("onClick type = " + evt.type);
-    console.log("onClick evt.data = " + Object.getOwnPropertyNames(evt.data));
-    console.log("onClick data  = " + evt.data);*/
-    console.log("onClick this  = " + this.name);
-    console.log("onClick currentTarget = " + evt.currentTarget.name);
-    console.log("onClick target = " + evt.target.name);
+   // console.log("onClick evt = " + Object.getOwnPropertyNames(evt));
+   
+   // console.log("onClick this  = " + this.name);
+   // console.log("onClick currentTarget = " + evt.currentTarget.name);
+   // console.log("onClick target = " + evt.target.name);
     var arrHeaderText:string[] = [];
     var arrDataGridHeaderText:string[] = [];
     arrHeaderText = ['My Account', 'Promotions', 'Bring-A-Friend', 'RPS'];
@@ -219,7 +213,7 @@ import { object } from 'prop-types';
   private RenderLobbyTables(param, strType:string, arrHeader:string[] = [], arrDataGridHeader:string[] = [])
   {
     //this.lobbytable = PIXI.Texture.from("./../src/Assets/img/Lobby-Table.jpg");
-    console.log("Lobby exist?" + this.container.getChildByName(strType+"-"+this.strcurrencyType));
+    // /console.log("Lobby exist?" + this.container.getChildByName(strType+"-"+this.strcurrencyType));
     const startLobby = this.container.getChildByName("Start");
     startLobby.visible = false;
     if(this.container.getChildByName(strType) != null)
@@ -227,7 +221,8 @@ import { object } from 'prop-types';
       this.DataGrid = this.container.getChildByName(strType);
       this.DataGrid.visible = true;
       const home = this.container.getChildByName("home");
-      home.visible = false
+      home.visible = false;
+      document.addEventListener('wheel', (this, this.scroll));
       return;
     }
     const DataGrid = new PIXI.Container();
@@ -252,28 +247,14 @@ import { object } from 'prop-types';
     var arrHeaderXpos:number[] = [315, 555, 797, 1064];
     for(var j:number = 0; j < arrHeader.length; ++j)
     {
-      console.log("arrHeader[j] = " + arrHeader[j]);
+      //console.log("arrHeader[j] = " + arrHeader[j]);
       const txtHeader = new PIXI.Text(arrHeader[j], style2);
       txtHeader.x = arrHeaderXpos[j];
       txtHeader.y = 100;
       DataGrid .addChild(txtHeader);
     }
     DataGrid .addChild(Header);
-    /*const MyAccount = new PIXI.Text('My Account', style2);
-    MyAccount.x = 315;
-    MyAccount.y = 98;
-
-    const Promotions = new PIXI.Text('Promotions', style2);
-    Promotions.x = 555;
-    Promotions.y = 98;
-
-    const BringAFriend = new PIXI.Text('Bring-A-Friend', style2);
-    BringAFriend.x = 797;
-    BringAFriend.y = 100;
-
-    const RPS = new PIXI.Text('RPS', style2);
-    RPS.x = 364;
-    RPS.y = 100;*/
+    
     var arrXpos:number[] = [100, 243, 364,532, 677,773,941,1109];
     for(var i:number = 0; i < arrDataGridHeader.length; ++i)
     {
@@ -283,53 +264,7 @@ import { object } from 'prop-types';
       DataGrid .addChild(text);
     }
 
-    /*const Name = new PIXI.Text('Name', style);
-    Name.x = 100;
-    Name.y = 180;
-
-    const Deal = new PIXI.Text('Deals', style);
-    Deal.x = 243;
-    Deal.y = 180;
-
-    const MaxPlayers = new PIXI.Text('Max Players', style);
-    MaxPlayers.x = 364;
-    MaxPlayers.y = 180;
-
-    const EntryFee = new PIXI.Text('Entry Fee', style);
-    EntryFee.x = 532;
-    EntryFee.y = 180;
-
-    const Prize = new PIXI.Text('Prize', style);
-    Prize.x = 677;
-    Prize.y = 180;
-
-    const ActivePlayers = new PIXI.Text('Active Players', style);
-    ActivePlayers.x = 773;
-    ActivePlayers.y = 180;
-
-    const Registering = new PIXI.Text('Registering', style);
-    Registering.x = 941;
-    Registering.y = 180;
-
-    const Action = new PIXI.Text('Action', style);
-    Action.x = 1109;
-    Action.y = 180;*/
     
-   
-    // DataGrid.addChild(MyAccount);
-    // DataGrid.addChild(Promotions);
-    // DataGrid.addChild(BringAFriend);
-   
-    /*DataGrid.addChild(Name);
-    DataGrid.addChild(Deal);
-    DataGrid.addChild(MaxPlayers);
-    DataGrid.addChild(EntryFee);
-    DataGrid.addChild(Prize);
-    DataGrid.addChild(ActivePlayers);
-    DataGrid.addChild(Registering);
-    DataGrid.addChild(Action);*/
-    //const lobbyspr = new PIXI.Sprite(this.lobbytable);
-    //this.container.addChild(lobbyspr);
     this.home = PIXI.Texture.from("./../src/Assets/img/cards.png");
     const homespr = new PIXI.Sprite(this.home);
     homespr.name = "home";
@@ -354,6 +289,7 @@ import { object } from 'prop-types';
     this.DataGrid.visible = false;
     const home = this.container.getChildByName("home");
     home.visible = false;
+    document.removeEventListener('wheel', (this, this.scroll));
    
   }
 
@@ -364,24 +300,31 @@ import { object } from 'prop-types';
     const style1 = new PIXI.TextStyle({fill:'#ffffff',fontWeight: 'bold',fontSize: 13});
     var arrXpos:number[] = [40, 200, 350,485, 625,755,920,1050];
     const Mask = new PIXI.Graphics();
-    Mask.beginFill(0x210237, 0.5);//0x650A5A 0x210237
-    Mask.drawRoundedRect(60, 83, 1159, 554, 14);
+    Mask.beginFill(0xffffff, 0.2);//0x650A5A 0x210237
+    Mask.drawRect(60, 239, 1159, 397);
     Mask.endFill();
+    lobbyGrid.name = "list";
     const scroll = new PIXI.Graphics();
     scroll.beginFill(0xcccccc, 0.2);//0x650A5A 0x210237
-    scroll.drawRect(1202, 241, 2, 395);
+    scroll.drawRect(1100, 239, 2, 397);//(1202, 241, 2, 395);
     scroll.endFill();
     const scrollbar = new PIXI.Graphics();
     scrollbar.beginFill(0xcccccc, 0.8);//0x650A5A 0x210237
-    scrollbar.drawRoundedRect(1198, 241, 10, 40, 1);
+    scrollbar.drawRoundedRect(0,0,10, 40, 1)//(1096, 241, 10, 40, 1);//(1198, 241, 10, 40, 1);
     scrollbar.endFill();
-    scrollbar.interactive = true;
-    scrollbar.buttonMode = true;
-    scrollbar
+    scrollbar.name = "ScrollBar";
+    const scrollbarspr = new PIXI.Container();
+    scrollbarspr.addChild(scrollbar);
+    scrollbarspr.x = 1096;
+    scrollbarspr.y = 239;
+    scrollbarspr.interactive = true;
+    scrollbarspr.buttonMode = true;
+    scrollbarspr
         .on('pointerdown', this.onDragStart, this)
         .on('pointerup', this.onDragEnd, this)
         .on('pointerupoutside', this.onDragEnd, this)
         .on('pointermove', this.onDragMove, this);
+    
     lobbyGrid.mask = Mask;
     var arrText:string[];
     for(var i:number = 0; i < param.length; ++i)
@@ -392,20 +335,20 @@ import { object } from 'prop-types';
         {
           arrText = [param[i]["game_title"], param[i]["deals"].toString(), 
           param[i]["seats"].toString(),param[i]["entry_fee"].toString(), 
-          param[i]["pool_deal_prize"].toString(),"0","0"];
+          param[i]["pool_deal_prize"].toString(),(i+1).toLocaleString(),"0"];
         }
         else if(strType == "Pool"){
           arrText = [param[i]["game_title"], param[i]["pool_game_type"].toString(), 
           param[i]["seats"].toString(),param[i]["entry_fee"].toString(), 
-          param[i]["pool_deal_prize"].toString(),"0","0"];
+          param[i]["pool_deal_prize"].toString(),(i+1).toLocaleString(),"0"];
         }
         else{
           arrText = [param[i]["game_title"], param[i]["number_of_deck"].toString(), 
           param[i]["seats"].toString(),param[i]["entry_fee"].toString(), 
-          param[i]["pool_deal_prize"].toString(),"0","0"];
+          param[i]["pool_deal_prize"].toString(),(i+1).toLocaleString(),"0"];
         }
        
-        console.log("onClick param  = " + param[i]);
+        // /console.log("onClick param  = " + param[i]);
         const Header = new PIXI.Graphics();
         lobbyspr.y = i * 51;
         lobbyspr.addChild(Header);
@@ -418,7 +361,7 @@ import { object } from 'prop-types';
         }
         var playNow = PIXI.Texture.from("./../src/Assets/img/play-now.png");
         const playNowspr = new PIXI.Sprite(playNow);
-        playNowspr.x = 1050;
+        playNowspr.x = 1050;//950;//1050;
         playNowspr.y = 15;
         playNowspr.scale.x = 0.45;
         playNowspr.scale.y = 0.45;
@@ -439,10 +382,16 @@ import { object } from 'prop-types';
     }
     lobbyGrid.x = 60;
     lobbyGrid.y = 239;
+    document.addEventListener('wheel', (this, this.scroll), false);
+    //document.addEventListener('mousemove', this.onMouseMove);
+    //lobbyGrid.addListener("")
     //DataGrid.addChild(scroll);
-    DataGrid.addChild(Mask, lobbyGrid);
-    DataGrid.addChild(scroll);
-    DataGrid.addChild(scrollbar);
+    //DataGrid.mask = Mask;
+    
+    DataGrid.addChild(lobbyGrid);
+    //DataGrid.addChild(scroll);
+    //DataGrid.addChild(scrollbarspr);
+    DataGrid.addChild(Mask);
     /*
     console.log("onClick (i)  = " + (i));
         console.log("onClick (i%2)  = " + (i%2));
@@ -450,35 +399,114 @@ import { object } from 'prop-types';
   }
   private onDragStart(event)
   {
-    console.log("openGame event.target  = " + event.target);
-    console.log("openGame event.currentTarget  = " + event.currentTarget);
+    console.log("onDragStart event.target  = " + event.target);
+    console.log("onDragStart event.currentTarget  = " + event.currentTarget);
+    console.log("onDragStart event.currentTarget  = " + event.currentTarget.name);
+    document.addEventListener('mousemove', this.onMouseMove);
+    //event.currentTarget.y = 100;
     event.currentTarget.dragging = true;
     //this.data = event.data;
     //this.alpha = 0.5;
     //this.dragging = true;
   }
+  private scroll(event)
+  {
+    console.log("scroll event.clientX  = " + event.clientX);
+    console.log("scroll event  = " + Object.getOwnPropertyNames(event));
+    console.log("scroll event.target  = " + event.target);
+    console.log("scroll event.currentTarget  = " + event.currentTarget);
+    console.log("scroll event.currentTarget ***  = " + (event.currentTarget == global.game.getGameConfig().getGameView().DataGrid.parent));
+    //if()
+    console.log("scroll this  = " + this);
+    const lobby = global.game.getGameConfig().getGameView().DataGrid.getChildByName("list");
+    if(event.clientY > 239 && event.clientY < 239+397 && event.clientX > 60 && event.clientX < 60 + 1150)
+    {
+      if (event.deltaY < 0)
+      {
+        console.log('scrolling up');
+        if(lobby.y < 239)
+        {
+          lobby.y += 20;
+        }
+        
+      // document.getElementById('status').textContent= 'scrolling up';
+      }
+      else if (event.deltaY > 0)
+      {
+        console.log('scrolling down lobby.y = ' +  lobby.y);
+        console.log('scrolling down lobby.height = ' +  (lobby.height));
+        console.log('scrolling down lobby.y + lobby.height= ' +  (lobby.y + lobby.height + 397));
+        console.log('scrolling down lobby.height - 239 = ' +  (lobby.height - 239));
+        //document.getElementById('status').textContent= 'scrolling down';
+        if(lobby.y + lobby.height - 397> 239)
+        {
+          lobby.y -= 20;
+        }
+        
+      }
+    }
+    
+    //event.currentTarget.y = this.mouseYPos;
+    //lobby.y += lo
+    //event.currentTarget.dragging = false;
+    ///document.removeEventListener('mousemove', this.onMouseMove);
+    //this.dragging = true;
+  }
   private onDragEnd(event)
   {
     event.currentTarget.dragging = false;
+    document.removeEventListener('mousemove', this.onMouseMove);
     //this.dragging = true;
+  }
+  private onMouseMove(event)
+  {
+    console.log("onMouseMove event.clientX  = " + event.clientX);
+    //console.log("onMouseMove event.clientY  = " + event.clientY);
+   // console.log("onMouseMove event.target  = " + event.target);
+    //console.log("onMouseMove ******event.target.y  = " + event.target.y);
+    global.game.getGameConfig().getGameView().mouseYPos = event.clientY;
+    if(event.clientY > 239 && event.clientY < 239+397 && event.clientX > 60 && event.clientX < 60 + 1150)
+    {
+      document.addEventListener('wheel', (global.game.getGameConfig().getGameView(), global.game.getGameConfig().getGameView().scroll), false);
+    }
+    else{
+      document.removeEventListener('wheel', (global.game.getGameConfig().getGameView(), global.game.getGameConfig().getGameView().scroll), false);
+    }
+   // console.log("onMouseMove ####event.target.y  = " + event.target.y);
+    //console.log("onMouseMove event.currentTarget  = " + event.currentTarget);
+    //if()
   }
   private onDragMove(event)
   {
+    //console.log("onDragMove event.currentTarget.dragging  = " + event.currentTarget.dragging);
+    //console.log("onDragMove event.clientX  = " + event.clientX);
+    //console.log("onDragMove event.clientY  = " + event.clientY);
     if (event.currentTarget.dragging) {
-      const newPosition = event.currentTarget.getLocalPosition(event.currentTarget.parent);
-      event.currentTarget.x = newPosition.x;
-      event.currentTarget.y = newPosition.y;
+      //const newPosition = event.currentTarget.getLocalPosition(event.currentTarget.parent);
+      //event.currentTarget.x = newPosition.x;
+      if(this.mouseYPos > 239 && this.mouseYPos < (239+357))
+      {
+        event.currentTarget.y = this.mouseYPos;
+        const lobby = event.currentTarget.parent.getChildByName("list");
+        console.log("onDragMove (event.currentTarget.y - 241 )  = " + (event.currentTarget.y - 239 ));
+        console.log("onDragMove (event.currentTarget.y - 241 )* 355  = " + (event.currentTarget.y - 239 )*355);
+        console.log("onDragMove (lobby.height - 554)  = " + (lobby.height - 554));
+        console.log("onDragMove (lobby.height)  = " + (lobby.height));
+        console.log("onDragMove (event.currentTarget.y - 241 )*(355)/(lobby.height - 554)  = " + (event.currentTarget.y - 239 )*(355)/(lobby.height - 554));
+        lobby.y = (239) - (2*((event.currentTarget.y - 239)*(lobby.height + 397)/(lobby.height + 40)));
+      }
+      //event.currentTarget.y = this.mouseYPos;
   }
   }
  
 
   private openGame(event)
   {
-    console.log("openGame event  = " + event);
-    console.log("openGame this  = " + this);
-    console.log("openGame getOwnPropertyNames this  = " + Object.getOwnPropertyNames(this));
-    console.log("openGame getOwnPropertyNames token  = " + this["token"]);
-    console.log("openGame getOwnPropertyNames event = " + Object.getOwnPropertyNames(event));
+   // console.log("openGame event  = " + event);
+    //console.log("openGame this  = " + this);
+   // console.log("openGame getOwnPropertyNames this  = " + Object.getOwnPropertyNames(this));
+   // console.log("openGame getOwnPropertyNames token  = " + this["token"]);
+   // console.log("openGame getOwnPropertyNames event = " + Object.getOwnPropertyNames(event));
     //window.open("https://rummydesk.com/", );
     //global.game.OpenWindow("https://rummydesk.com/index.php/game_lobby/" + this.nOpenGame);
     global.game.OpenWindow("http://127.0.0.1:5500/" + this);

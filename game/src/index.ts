@@ -30,7 +30,7 @@ export class Game {
       //.configure(GameConfig)
       .initialize();
       this.gameConfig = new GameConfig();
-    //console.log("creating screen manager view");
+    console.log("creating screen manager view");
     this.render();
    // gameConfig = new GameConfig();
     //GameConfig.setGame(this);

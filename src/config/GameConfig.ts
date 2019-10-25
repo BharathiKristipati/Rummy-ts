@@ -34,7 +34,7 @@ import {
     private game_lobby:GameView;
     constructor()
     {
-      console.log("constructor");
+      //console.log("constructor");
       //global.game.setGameConfig(this);
      //this.sfs.connect("127.0.0.1", 9933);
      var config = {host:"rummydesk.com",port:8080,useSSL:false,zone:"RummyZone",debug:false};
@@ -53,7 +53,7 @@ import {
 
     public onRoomJoin(evtParams)
     {
-      console.log("onRoomJoin evtParams = " + Object.getOwnPropertyNames(evtParams));
+      //console.log("onRoomJoin evtParams = " + Object.getOwnPropertyNames(evtParams));
       var TempObj = new SFSObject();
       var date = new Date();
       TempObj.putUtfString("USER_GAME_TOKEN", date.getMilliseconds.toString());
@@ -63,42 +63,17 @@ import {
 
     public onLogin(evtParams)
     {
-      console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
-      console.log("onLogin zone = " + evtParams.zone);
-      console.log("onLogin user = " + evtParams.user);
+      //console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
+      //console.log("onLogin zone = " + evtParams.zone);
+      //console.log("onLogin user = " + evtParams.user);
      
       var data = evtParams.data;
       var user:SFSUser = evtParams.user;
       var gamesArray;
-     /* fetch('http://localhost:3000/games', {method: 'GET',headers: {'Accept': 'application/json','Content-Type': 'application/json'}})
-      .then(res => {let b:Games = res;console.log(b);})
-      .then(async function (a) {
-        console.log(a);
-        console.log((String(a)));// call the json method on the response to get JSON
-    })
-      .then(res => console.log(res))
-      .then(body => console.log(body));*/
-
-    /*fetch(`http://localhost:3000/games`)
-        .then(res => res.json())
-        .then(res => res.map((games: any) => formatMovie(games)))
-        .then(async function (a) {
-        console.log(a);
-        this.LoadLobby(a);
-        //gamesArray = a;
-        console.log("a = "  +a);
-        console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
-        //this.LoadLobby(a);
-    });
-    */
+     
       gamesArray = this.getvals(this.LoadLobby);
 
-      //this.LoadLobby(gamesArray);
-      //console.log("onLogin user = " + user.name);
-      //console.log("onLogin data = " + Object.getOwnPropertyNames(data));
-      //console.log("onLogin data = " + evtParams.data.data);
-      //console.log("onLogin _serializer = " + Object.getOwnPropertyNames(data._serializer));
-      //console.log("onLogin _dataHolder = " + JSON.stringify(data._dataHolder));
+     
     }
 
     public getvals(cb){
@@ -106,11 +81,11 @@ import {
       .then(res => res.json())
       .then(res => res.map((games: any) => formatMovie(games)))
       .then(async function (a) {
-      console.log(a);
+      //console.log(a);
      // this.LoadLobby(a);
       //gamesArray = a;
-      console.log("a = "  +a);
-      console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
+     // console.log("a = "  +a);
+     // console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
       cb(a);
       return a;
       //this.LoadLobby(a);
@@ -121,27 +96,21 @@ import {
 
     public LoadLobby(evtParams)
     {
-      console.log("LoadLobby evtParams = " + evtParams.length);// + JSON.stringify(evtParams));
-      console.log("LoadLobby root = " + document);
-     // console.log("LoadLobby this.oDealListCash.length = " + this.oDealListCash.length);
-     // console.log("LoadLobby this.oDealListPractice.length = " + this.oDealListPractice.length);
-      //console.log("LoadLobby this.oPointsListCash.length = " + this.oPointsListCash.length);
-     // console.log("LoadLobby this.oPointsListPractice.length = " + this.oPointsListPractice.length);
-     // console.log("LoadLobby this.oPoolListCash.length = " + this.oPoolListCash.length);
-      //console.log("LoadLobby this.oPoolListPractice.length = " + this.oPoolListPractice.length);
+      //console.log("LoadLobby evtParams = " + evtParams.length);// + JSON.stringify(evtParams));
+     // console.log("LoadLobby root = " + document);
       global.game.getGameConfig().oDealListPractice = new Array<Games>();
       global.game.getGameConfig().oDealListCash = new Array<Games>();
       global.game.getGameConfig().oPointsListPractice = new Array<Games>();
       global.game.getGameConfig().oPointsListCash = new Array<Games>();
       global.game.getGameConfig().oPoolListPractice = new Array<Games>();
       global.game.getGameConfig().oPoolListCash = new Array<Games>();
-      console.log("LoadLobby this = " + this);
+      //console.log("LoadLobby this = " + this);
       //this = global.game.getGameConfig();
-      console.log("LoadLobby global.game.getGameConfig() = " + global.game.getGameConfig());
+     // console.log("LoadLobby global.game.getGameConfig() = " + global.game.getGameConfig());
       for(var i = 0; i < evtParams.length; ++i)
       {
-        console.log("LoadLobby evtParams.game_type = " + evtParams[i].game_type);
-        console.log("LoadLobby evtParams.game_sub_type = " + evtParams[i].game_sub_type);
+        //console.log("LoadLobby evtParams.game_type = " + evtParams[i].game_type);
+       // console.log("LoadLobby evtParams.game_sub_type = " + evtParams[i].game_sub_type);
         if(evtParams[i].game_sub_type == "Deals")
         {
           if(evtParams[i].game_type == "Cash")
@@ -168,15 +137,13 @@ import {
             global.game.getGameConfig().oPoolListPractice.push(evtParams[i]);
           }
         }
-        //console.log("LoadLobby evtParams = " + evtParams.length());
-        //if(evtParams[i])
       }
-      console.log("LoadLobby this.oDealListCash.length = " + global.game.getGameConfig().oDealListCash.length);
+      /*console.log("LoadLobby this.oDealListCash.length = " + global.game.getGameConfig().oDealListCash.length);
       console.log("LoadLobby this.oDealListPractice.length = " + global.game.getGameConfig().oDealListPractice.length);
       console.log("LoadLobby this.oPointsListCash.length = " + global.game.getGameConfig().oPointsListCash.length);
       console.log("LoadLobby this.oPointsListPractice.length = " + global.game.getGameConfig().oPointsListPractice.length);
       console.log("LoadLobby this.oPoolListCash.length = " + global.game.getGameConfig().oPoolListCash.length);
-      console.log("LoadLobby this.oPoolListPractice.length = " + global.game.getGameConfig().oPoolListPractice.length);
+      console.log("LoadLobby this.oPoolListPractice.length = " + global.game.getGameConfig().oPoolListPractice.length);*/
       global.game.getGameConfig().game_lobby = new GameView();
       //this.game_lobby = lobby;
       global.game.getGameConfig().game_lobby.loadLobby();
@@ -227,16 +194,16 @@ import {
 
     public onExtensionResponse(evtParams)
     {
-      console.log("onExtensionResponse evtParams = " + Object.getOwnPropertyNames(evtParams));
+      //console.log("onExtensionResponse evtParams = " + Object.getOwnPropertyNames(evtParams));
       console.log("onExtensionResponse evtParams = " + JSON.stringify(evtParams));
     }
 
     public onConnection(evtParams)
     {
-      console.log("onConnection evtParams = " + JSON.stringify(evtParams));
+      //console.log("onConnection evtParams = " + JSON.stringify(evtParams));
         if (evtParams.success)
         {
-            console.log("Connected to SmartFoxServer 2X!");
+            //console.log("Connected to SmartFoxServer 2X!");
             //this.sfs.//SFSEvent("LOGIN");
             var params = new SFS2X.SFSObject();
             params.putUtfString("REQUEST_TYPE", "LOGIN");
