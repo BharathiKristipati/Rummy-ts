@@ -62,7 +62,7 @@ import {
       var user:SFSUser = evtParams.user;
       var gamesArray;
       this.game_table = new GameView();
-      this.game_table.loadGame();
+      this.game_table.loginScreen();//loadGame();
     }
 
     
