@@ -1,7 +1,8 @@
 import { Game } from './../index';
 import * as global from  './../index';
-import * as Pixi from './../../libs/pixi.input.js'
+//import * as Pixi from './../../libs/PixiTextInput.js'
 import { Container, Sprite} from "pixi.js";
+import * as pixi from "pixi-text-input";
 import { Games } from './../entity/Games';
 import { object } from 'prop-types';
 
@@ -11,6 +12,7 @@ import { object } from 'prop-types';
     private table;
     private user;
     private container;
+    private domField;
 
     constructor() {
     super();
@@ -20,9 +22,22 @@ import { object } from 'prop-types';
   {
     this.container = new PIXI.Container();
     const startContainer = new PIXI.Container();
+    var input = new pixi.TextInput({
+      input: {
+        fontFamily: 'Arial',
+        fontSize: '32px',
+        padding: '14px 24px',
+        width: '500px',
+        color: 'white'
+      },box: {fill: 0xE8E9F3, rounded: 16, stroke: {color: 0xCBCEE0, width: 4}}});
+   // TextInput.border = true;
+   // this.domField = document.createElement("input");
+   // this.domField.type = "text";
+   // this.domField.style.position = "absolute";
     startContainer.name = "Login";
     global.game.getStage().addChild(this.container);
     this.bg = PIXI.Texture.from("./../src/Assets/img/background.png");
+    const style = new PIXI.TextStyle({fill:'#f6ba32',fontWeight: 'bold',fontSize: 14});
     const bgspr = new PIXI.Sprite(this.bg);
     bgspr.scale.x = 0.67;
     bgspr.scale.y = 0.67;
@@ -34,13 +49,16 @@ import { object } from 'prop-types';
     HeaderH.beginFill(0x51178a, 0.9);//0x650A5A 0x210237
     HeaderH.drawRoundedRect(325, 156, 650, 410, 14);
     HeaderH.endFill();
+    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
+    //var inputField = new Pixi.PixiTextInput("hello",style);
+//container.addChild(inputField);
     //var input = new Pixi.Input();
-    
+    //var input = new Pixi.Input({ type: "password" });
   
     startContainer.addChild(bgspr);
     startContainer.addChild(registrationspr);
     startContainer .addChild(HeaderH);
-    //startContainer.addChild(input);
+    startContainer.addChild(input);
     this.container.addChild(startContainer);
   }
 
