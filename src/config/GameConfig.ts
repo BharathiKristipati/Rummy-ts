@@ -77,26 +77,36 @@ import {
     }
 
     public getvals(cb){
-      return fetch(`http://localhost:3000/games`)
+     /* return fetch('https://rummydesk.com/api/game_lobby')//`http://localhost:3000/games`)
       .then(res => res.json())
-      .then(res => res.map((games: any) => formatMovie(games)))
-      .then(async function (a) {
+     // .then(res => res.map((games: any) => formatMovie(games)))
+      .then(async function (res) {
       //console.log(a);
      // this.LoadLobby(a);
       //gamesArray = a;
      // console.log("a = "  +a);
      // console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
-      cb(a);
-      return a;
+      cb(res);
+      return res;
       //this.LoadLobby(a);
       });
-      //.catch(error => console.warn(error));
+      //.catch(error => console.warn(error));*/
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://rummydesk.com/api/game_lobby', true);
+      if (cb) xhr.onload = function() { cb(JSON.parse(this['responseText'])); };
+      xhr.send();
+      /*if (data != null) {
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.send(JSON.stringify(data));
+      }
+      else xhr.send();*/
 
     }
 
     public LoadLobby(evtParams)
     {
-      //console.log("LoadLobby evtParams = " + evtParams.length);// + JSON.stringify(evtParams));
+      console.log("LoadLobby evtParams = " + evtParams.length);// + JSON.stringify(evtParams));
+      console.log("LoadLobby JSON.stringify(evtParams) = " + JSON.stringify(evtParams));
      // console.log("LoadLobby root = " + document);
       global.game.getGameConfig().oDealListPractice = new Array<Games>();
       global.game.getGameConfig().oDealListCash = new Array<Games>();
@@ -214,12 +224,36 @@ import {
             //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
             req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
             this.sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));
+            this.WebLogin(this.WebLoginRes);
         }
         else
         {
             console.log("Connection failed. Is the server running at all?");
         }
+        
     }
+
+    public WebLogin(cb)
+    {
+      //return fetch('https://rummydesk.com/api/game_lobby')
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://rummydesk.com/api/login', true);
+      if (cb) xhr.onload = function() { cb(JSON.parse(this['responseText'])); };
+      //xhr.setRequestHeader('Content-Type', 'application/json');
+      var formData = new FormData();
+      formData.append("username", 'leazo');
+      formData.append("password", 'leazo123');
+      // var data = new Object();
+      // data["username"] = 'leazo';
+      // data["password"] = 'leazo123';
+      xhr.send(formData);
+      //xhr.send();
+    }
+    public WebLoginRes(evtParams)
+    {
+      console.log("WebLoginRes evtParams = " + JSON.stringify(evtParams));
+    }
+
 
     public onConnectionLost(evtParams)
     {

@@ -2,9 +2,11 @@ import { Game } from './../index';
 import * as global from  './../index';
 //import * as Pixi from './../../libs/PixiTextInput.js'
 import { Container, Sprite} from "pixi.js";
-import * as pixi from "pixi-text-input";
+//import {TextInput} from "pixi-text-input";
 import { Games } from './../entity/Games';
 import { object } from 'prop-types';
+//const TextInput = require('pixi-text-input')
+const PixiTextInput = require('./../../node_modules/pixi-text-input/PIXI.TextInput.js');
 
 
   export class GameView extends Container {
@@ -22,7 +24,7 @@ import { object } from 'prop-types';
   {
     this.container = new PIXI.Container();
     const startContainer = new PIXI.Container();
-    var input = new pixi.TextInput({
+    var inputField =  PixiTextInput.TextInput({
       input: {
         fontFamily: 'Arial',
         fontSize: '32px',
@@ -30,6 +32,14 @@ import { object } from 'prop-types';
         width: '500px',
         color: 'white'
       },box: {fill: 0xE8E9F3, rounded: 16, stroke: {color: 0xCBCEE0, width: 4}}});
+    /*var input = pixi.TextInput({
+      input: {
+        fontFamily: 'Arial',
+        fontSize: '32px',
+        padding: '14px 24px',
+        width: '500px',
+        color: 'white'
+      },box: {fill: 0xE8E9F3, rounded: 16, stroke: {color: 0xCBCEE0, width: 4}}});*/
    // TextInput.border = true;
    // this.domField = document.createElement("input");
    // this.domField.type = "text";
@@ -58,7 +68,7 @@ import { object } from 'prop-types';
     startContainer.addChild(bgspr);
     startContainer.addChild(registrationspr);
     startContainer .addChild(HeaderH);
-    startContainer.addChild(input);
+    startContainer.addChild(inputField);
     this.container.addChild(startContainer);
   }
 
