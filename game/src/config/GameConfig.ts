@@ -25,6 +25,7 @@ import {
     private oPoolListPractice:Array<Games> = new Array<Games>();
     private oPoolListCash:Array<Games> = new Array<Games>();
     private game_table:GameView;
+    private access_token:string;
     constructor()
     {
       console.log("constructor");
@@ -57,12 +58,23 @@ import {
       console.log("onLogin evtParams = " + Object.getOwnPropertyNames(evtParams));
       console.log("onLogin zone = " + evtParams.zone);
       console.log("onLogin user = " + evtParams.user);
-     
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://rummydesk.com/api/profile', true);
+      xhr.onload = function() { global.game.getGameConfig().playerInfo(JSON.parse(this['responseText'])); };
+      //xhr.setRequestHeader('Content-Type', 'application/json');
+      var formData = new FormData();
+      formData.append("access_token", global.game.getGameConfig().access_token);
+      xhr.send(formData);
       var data = evtParams.data;
       var user:SFSUser = evtParams.user;
       var gamesArray;
       this.game_table = new GameView();
-      this.game_table.loginScreen();//loadGame();
+      this.game_table.loadGame();//loadGame();loginScreen
+    }
+
+    public playerInfo(evtParams)
+    {
+      console.log("playerInfo evtParams = " + JSON.stringify(evtParams));
     }
 
     
@@ -87,22 +99,47 @@ import {
       console.log("onConnection evtParams = " + JSON.stringify(evtParams));
         if (evtParams.success)
         {
-            console.log("Connected to SmartFoxServer 2X!");
-            //this.sfs.//SFSEvent("LOGIN");
-            var params = new SFS2X.SFSObject();
-            params.putUtfString("REQUEST_TYPE", "LOGIN");
-            params.putUtfString("USER_NAME", "leazo");
-            params.putUtfString("PASSWORD", "leazo123");
-            params.putUtfString("DEVICE_TOKEN","");
-            var req:SFS2X.LoginRequest;
-            //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
-            req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
-            this.sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));
+            //this.game_table.loginScreen();
+            this.WebLogin(this.WebLoginRes);
         }
         else
         {
             console.log("Connection failed. Is the server running at all?");
         }
+    }
+    public WebLogin(cb)
+    {
+      //return fetch('https://rummydesk.com/api/game_lobby')
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://rummydesk.com/api/login', true);
+      if (cb) xhr.onload = function() { cb(JSON.parse(this['responseText'])); };
+      //xhr.setRequestHeader('Content-Type', 'application/json');
+      var formData = new FormData();
+      formData.append("username", 'leazo');
+      formData.append("password", 'leazo123');
+      // var data = new Object();
+      // data["username"] = 'leazo';
+      // data["password"] = 'leazo123';
+      xhr.send(formData);
+      //xhr.send();
+    }
+
+    public WebLoginRes(evtParams)
+    {
+      console.log("WebLoginRes evtParams = " + JSON.stringify(evtParams));
+      var params = new SFS2X.SFSObject();
+      params.putUtfString("REQUEST_TYPE", "LOGIN");
+      params.putUtfString("USER_NAME", "leazo");
+      params.putUtfString("PASSWORD", "");
+      params.putUtfString("USER_ID", evtParams.data.id);
+      params.putUtfString("DEVICE_TOKEN","");
+      var req:SFS2X.LoginRequest;
+      console.log("WebLoginRes params = " + JSON.stringify(params.get("USER_ID")));
+      console.log("WebLoginRes params = " + document.getElementById("lobby").getAttribute("access_token"));
+      global.game.getGameConfig().access_token = evtParams.data.access_token;
+      //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
+      req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
+      global.game.getGameConfig().sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));
     }
 
     public onConnectionLost(evtParams)
