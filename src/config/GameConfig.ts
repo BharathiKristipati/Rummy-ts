@@ -78,20 +78,7 @@ import {
     }
 
     public getvals(cb){
-     /* return fetch('https://rummydesk.com/api/game_lobby')//`http://localhost:3000/games`)
-      .then(res => res.json())
-     // .then(res => res.map((games: any) => formatMovie(games)))
-      .then(async function (res) {
-      //console.log(a);
-     // this.LoadLobby(a);
-      //gamesArray = a;
-     // console.log("a = "  +a);
-     // console.log(("String(a) = " + String(a)));// call the json method on the response to get JSON
-      cb(res);
-      return res;
-      //this.LoadLobby(a);
-      });
-      //.catch(error => console.warn(error));*/
+     
       var xhr = new XMLHttpRequest();
       xhr.open('POST', 'https://rummydesk.com/api/game_lobby', true);
       if (cb) xhr.onload = function() { cb(JSON.parse(this['responseText'])); };
@@ -99,12 +86,7 @@ import {
       formData.append("username", 'leazo');
       formData.append("access_token", this.access_token);
       xhr.send(formData);
-      /*if (data != null) {
-          xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify(data));
-      }
-      else xhr.send();*/
-
+      
     }
 
     public LoadLobby(evtParams)
@@ -124,46 +106,7 @@ import {
       global.game.getGameConfig().oDealListCash = evtParams.data.cash.deals;
       global.game.getGameConfig().oPointsListPractice = evtParams.data.practice.points;
       global.game.getGameConfig().oPointsListCash = evtParams.data.cash.points;
-      //console.log("LoadLobby this = " + this);
-      //this = global.game.getGameConfig();
-     // console.log("LoadLobby global.game.getGameConfig() = " + global.game.getGameConfig());
-      /*for(var i = 0; i < evtParams.length; ++i)
-      {
-        //console.log("LoadLobby evtParams.game_type = " + evtParams[i].game_type);
-       // console.log("LoadLobby evtParams.game_sub_type = " + evtParams[i].game_sub_type);
-        if(evtParams[i].game_sub_type == "Deals")
-        {
-          if(evtParams[i].game_type == "Cash")
-          {
-            global.game.getGameConfig().oDealListCash.push(evtParams[i]);
-          }else{
-            global.game.getGameConfig().oDealListPractice.push(evtParams[i]);
-          }
-        }
-        else if(evtParams[i].game_sub_type == "Points")
-        {
-          if(evtParams[i].game_type == "Cash")
-          {
-            global.game.getGameConfig().oPointsListCash.push(evtParams[i]);
-          }else{
-            global.game.getGameConfig().oPointsListPractice.push(evtParams[i]);
-          }
-        }else if(evtParams[i].game_sub_type == "Pool")
-        {
-          if(evtParams[i].game_type == "Cash")
-          {
-            global.game.getGameConfig().oPoolListCash.push(evtParams[i]);
-          }else{
-            global.game.getGameConfig().oPoolListPractice.push(evtParams[i]);
-          }
-        }
-      }*/
-      /*console.log("LoadLobby this.oDealListCash.length = " + global.game.getGameConfig().oDealListCash.length);
-      console.log("LoadLobby this.oDealListPractice.length = " + global.game.getGameConfig().oDealListPractice.length);
-      console.log("LoadLobby this.oPointsListCash.length = " + global.game.getGameConfig().oPointsListCash.length);
-      console.log("LoadLobby this.oPointsListPractice.length = " + global.game.getGameConfig().oPointsListPractice.length);
-      console.log("LoadLobby this.oPoolListCash.length = " + global.game.getGameConfig().oPoolListCash.length);
-      console.log("LoadLobby this.oPoolListPractice.length = " + global.game.getGameConfig().oPoolListPractice.length);*/
+     
       global.game.getGameConfig().game_lobby = new GameView();
       //this.game_lobby = lobby;
       global.game.getGameConfig().game_lobby.loadLobby();
@@ -223,17 +166,7 @@ import {
       //console.log("onConnection evtParams = " + JSON.stringify(evtParams));
         if (evtParams.success)
         {
-            //console.log("Connected to SmartFoxServer 2X!");
-            //this.sfs.//SFSEvent("LOGIN");
-            /*var params = new SFS2X.SFSObject();
-            params.putUtfString("REQUEST_TYPE", "LOGIN");
-            params.putUtfString("USER_NAME", "leazo");
-            params.putUtfString("PASSWORD", "leazo123");
-            params.putUtfString("DEVICE_TOKEN","");
-            var req:SFS2X.LoginRequest;
-            //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
-            req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
-            this.sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));*/
+           
             this.WebLogin(this.WebLoginRes);
         }
         else

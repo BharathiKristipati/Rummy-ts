@@ -31,7 +31,7 @@ import {
       console.log("constructor");
       //global.game.setGameConfig(this);
      //this.sfs.connect("127.0.0.1", 9933);
-     var config = {host:"rummydesk.com",port:8080,useSSL:false,zone:"RummyZone",debug:false};
+     var config = {host:"localhost",port:8083,useSSL:false,zone:"RummyZone",debug:false};
      this.sfs = new SFS2X.SmartFox(config);
      this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION, this.onConnection, this);
      this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION_LOST, this.onConnectionLost, this);
@@ -69,7 +69,7 @@ import {
       var user:SFSUser = evtParams.user;
       var gamesArray;
       this.game_table = new GameView();
-      this.game_table.loadGame();//loadGame();loginScreen
+      this.game_table.loginScreen();//loadGame();loginScreen
     }
 
     public playerInfo(evtParams)
@@ -137,7 +137,7 @@ import {
       console.log("WebLoginRes params = " + JSON.stringify(params.get("USER_ID")));
       console.log("WebLoginRes params = " + document.getElementById("lobby").getAttribute("access_token"));
       global.game.getGameConfig().access_token = evtParams.data.access_token;
-      //this.sfs.send(new SFS2X.ExtensionRequest("LOGIN", params));
+      
       req = new SFS2X.LoginRequest("leazo", "", params, "RummyZone");
       global.game.getGameConfig().sfs.send(req);//new SFS2X.LoginRequest("", "", null, "RummyZone"));
     }
@@ -159,4 +159,3 @@ import {
      
     }
   }
-  //decorate(injectable(), Command);

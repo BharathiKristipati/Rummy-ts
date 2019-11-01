@@ -1,7 +1,9 @@
 import { Game } from './../index';
 import * as global from  './../index';
 //import * as Pixi from './../../libs/PixiTextInput.js'
-import { Container, Sprite, Texture, TextStyle, Graphics} from "pixi.js";
+import { Container, Sprite, Texture, TextStyle, Graphics,Text} from "pixi.js";
+const PixiTextInput = require("./../component/PixiTextInput");
+
 //import {TextInput} from "pixi-text-input";
 import { Games } from './../entity/Games';
 import { object } from 'prop-types';
@@ -20,7 +22,128 @@ import { object } from 'prop-types';
     super();
   }
 
-  public loginScreen()
+  public loginScreen() {
+    this.container = new Container();
+    const loginContainer = new Container();
+    loginContainer.name = "Login";
+
+    const background = new Sprite(Texture.from("./../src/Assets/img/background.png"));
+    background.scale.x = 0.67;
+    background.scale.y = 0.67;
+    background.width = window.innerWidth;
+    background.height = window.innerHeight;
+
+    const HeaderH = new Graphics();
+    HeaderH.beginFill(0x51178a, 0.9);
+    HeaderH.drawRoundedRect((window.innerWidth)/4, (window.innerHeight)/4, (window.innerWidth)/2, (window.innerHeight)/2, 14);
+    HeaderH.endFill();
+    // HeaderH.anchor(0.5,0.5);
+
+    let username = "", password = "";
+    let style = {
+
+    };
+
+    let usernameLabel = new Text("Email / Username / Phone Number: ", {fill: "#ffffff", fontSize: 20});
+    usernameLabel.x = 350;
+    usernameLabel.y = 255;
+
+   /* let usernameInput = new PixiTextInput("", style);
+    usernameInput.width = window.innerWidth/4;
+    usernameInput.height = 40;
+    usernameInput.position.x = (window.innerWidth/2) -225;
+    usernameInput.position.y = 250;
+    usernameInput.placeholder = "Email / Username / Phone Number: ";
+    usernameInput.change = function() {
+      username = usernameInput.text;
+    }*/
+
+    let usernameInput = new PixiTextInput("",  {fill: "#000000", fontSize: 30});
+          /*fontFamily: 'Arial',
+        fontSize: '20px',
+        padding: '8px 12px',
+        width: '225px',
+        color: 'black'
+      });*/
+      usernameInput.width =  (window.innerWidth/4);
+      //usernameInput1.height = 40;
+      usernameInput.placeholder = "Email / Username / Phone Number: ";
+      usernameInput.x = (window.innerWidth/2) -225;
+      usernameInput.y = 250;
+
+    let passwordLabel = new Text("Password: ", {fill: "#ffffff", fontSize: 20});
+    passwordLabel.x = 575;
+    passwordLabel.y = 325;
+    
+    /*let passwordInput = new PixiTextInput("", style, true);
+    passwordInput.width = window.innerWidth/4;
+    passwordInput.height = 40;
+    passwordInput.position.x = (window.innerWidth/2) -225;
+    passwordInput.position.y = 320;
+    passwordInput.placeholder = "Password";*/
+
+    let passwordInput = new PixiTextInput("",  {fill: "#000000", fontSize: 30});
+      passwordInput.width =  (window.innerWidth/4);
+      passwordInput.placeholder = "Password";
+      passwordInput.x = (window.innerWidth/2) -225;
+      passwordInput.y = 320;
+    passwordInput.change = function() {
+      password = passwordInput.text;
+    }
+
+    const loginImg = new Sprite(Texture.from("./../src/Assets/img/login.png"));
+    loginImg.x = (window.innerWidth/2) -225;
+    loginImg.y = 400;
+    loginImg.buttonMode = true;
+    loginImg.interactive = true;
+    loginImg.anchor.set(0, 0);
+
+    const registerImg = new Sprite(Texture.from("./../src/Assets/img/register.png"));
+    registerImg.x = (window.innerWidth/2) -25;
+    registerImg.y = 400;
+    registerImg.buttonMode = true;
+    registerImg.interactive = true;
+
+    const fbImg = new Sprite(Texture.from("./../src/Assets/img/facebook.png"));
+    fbImg.width = 30;
+    fbImg.height = 30;
+    fbImg.x = (window.innerWidth/2) -100;
+    fbImg.y = 500;
+
+    const gImg = new Sprite(Texture.from("./../src/Assets/img/gmail.png"));
+    gImg.width = 30;
+    gImg.height = 30;
+    gImg.x = (window.innerWidth/2) - 25;
+    gImg.y = 500;
+
+    loginImg.addListener("click", () => {
+      console.log("Username: ", username);
+      console.log("Password: ", password);
+    });
+    global.game.getStage().addChild(this.container);
+    registerImg.addListener("click", () => {
+     //global.game.getStage().addChild(this.loadGame());
+    });
+
+    loginContainer.addChild(background);
+    loginContainer.addChild(HeaderH);
+
+//    loginContainer.addChild(usernameLabel);
+  
+    //loginContainer.addChild(usernameInput);
+    // loginContainer.addChild(passwordLabel);
+    loginContainer.addChild(passwordInput);
+
+    loginContainer.addChild(loginImg);
+    loginContainer.addChild(registerImg);
+    loginContainer.addChild(fbImg);
+    loginContainer.addChild(gImg);
+    loginContainer.addChild(usernameInput);
+    this.container.addChild(loginContainer);
+    //return loginContainer;
+  }
+
+ /* public loginScreen()
   {
     this.container = new Container();
     const startContainer = new Container();
@@ -57,7 +180,7 @@ import { object } from 'prop-types';
               padding: '8px 12px',
               width: '220px',
               color: 'black'
-            },box: {fill: 0xE8E9F3, rounded: 8, stroke: {color: 0xCBCEE0, width: 2}}});
+            },box: {fill: 0xE8E9F3, rounded: 8, stroke: {color: 0xCBCEE0, width: 2}}});*/
     /*var input = pixi.TextInput({
       input: {
         fontFamily: 'Arial',
@@ -70,7 +193,7 @@ import { object } from 'prop-types';
    // this.domField = document.createElement("input");
    // this.domField.type = "text";
    // this.domField.style.position = "absolute";
-   LogininputField.x = 520;
+  /* LogininputField.x = 520;
    LogininputField.y = 215;
    EmailinputField.x = 520;
    EmailinputField.y = 265;
@@ -130,7 +253,7 @@ import { object } from 'prop-types';
     startContainer.addChild(facebookbtnspr);
     startContainer.addChild(gmailbtnspr);
     this.container.addChild(startContainer);
-  }
+  }*/
 
   public loadGame()
   {
